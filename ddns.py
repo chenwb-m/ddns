@@ -5,6 +5,8 @@ from alidns import Alidns
 import time, requests, datetime
 from bs4 import BeautifulSoup
 from argparse import ArgumentParser
+import sys
+import signal
 
 parser = ArgumentParser(prog='ddns', usage='python ddns.py -k access_key -s access_key_secret -d domain -r record')
 parser.add_argument('-k', '--access_key', dest='access_key', nargs=1, type=str, required=True)
@@ -32,14 +34,31 @@ def get_out_ip(url):
     ip = txt[txt.find("[") + 1: txt.find("]")]
     return ip
 def get_real_url(url=r'http://www.ip138.com/'):
-    r = requests.get(url)
+    headers = {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6,da;q=0.5',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+        'Host': 'www.ip138.com',
+        'Referer': url,
+        'Pragma': 'no-cache',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36'
+    }
+    r = requests.get(url, headers=headers)
     txt = r.text
     soup = BeautifulSoup(txt,"html.parser").iframe
     return soup["src"]
 def get_pub_ip():
     return get_out_ip(get_real_url())
 
+def quit(signum, frame):
+    print('stop')
+    sys.exit()
 
+signal.signal(signal.SIGINT, quit)
+signal.signal(signal.SIGTERM, quit)
 alidns = Alidns(access_key, access_key_secret, domain)
 alidns.list()
 while True:
@@ -53,7 +72,7 @@ while True:
             print('%s -> ip not change' % (str(datetime.datetime.now())))
     except Exception as ex:
         print(ex)
-    try: 
+    try:
         time.sleep(60 * 10)
     except:
         pass
