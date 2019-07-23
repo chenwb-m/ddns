@@ -3,7 +3,7 @@
 
 from alidns import Alidns
 import time, requests, datetime
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 from argparse import ArgumentParser
 import sys
 import signal
@@ -27,31 +27,34 @@ print('%s -> record %s' % (str(datetime.datetime.now()), record))
 
 IP = ''
 
-# code from https://blog.csdn.net/junbujianwpl/article/details/72353940
-def get_out_ip(url):
-    r = requests.get(url)
-    txt = r.text
-    ip = txt[txt.find("[") + 1: txt.find("]")]
-    return ip
-def get_real_url(url=r'http://www.ip138.com/'):
-    headers = {
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
-        'Accept-Encoding': 'gzip, deflate',
-        'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6,da;q=0.5',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
-        'Host': 'www.ip138.com',
-        'Referer': url,
-        'Pragma': 'no-cache',
-        'Upgrade-Insecure-Requests': '1',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36'
-    }
-    r = requests.get(url, headers=headers)
-    txt = r.text
-    soup = BeautifulSoup(txt,"html.parser").iframe
-    return soup["src"]
+# # code from https://blog.csdn.net/junbujianwpl/article/details/72353940
+# def get_out_ip(url):
+#     r = requests.get(url)
+#     txt = r.text
+#     ip = txt[txt.find("[") + 1: txt.find("]")]
+#     return ip
+# def get_real_url(url=r'http://www.ip138.com/'):
+#     headers = {
+#         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+#         'Accept-Encoding': 'gzip, deflate',
+#         'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6,da;q=0.5',
+#         'Cache-Control': 'no-cache',
+#         'Connection': 'keep-alive',
+#         'Host': 'www.ip138.com',
+#         'Referer': url,
+#         'Pragma': 'no-cache',
+#         'Upgrade-Insecure-Requests': '1',
+#         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36'
+#     }
+#     r = requests.get(url, headers=headers)
+#     txt = r.text
+#     soup = BeautifulSoup(txt,"html.parser").iframe
+#     return soup["src"]
+# def get_pub_ip():
+#     return get_out_ip(get_real_url())
 def get_pub_ip():
-    return get_out_ip(get_real_url())
+    ip = requests.get('https://api.ipify.org').text
+    return ip
 
 def quit(signum, frame):
     print('stop')
@@ -76,4 +79,3 @@ while True:
         time.sleep(60 * 10)
     except:
         pass
-
