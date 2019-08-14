@@ -41,7 +41,7 @@ class Alidns(object):
         '''Print query results.'''
         if update:
             self.query()
-        print(self.__print)
+        print(self.__print, flush=True)
 
     def __is_exist(self, r):
         '''Record exist?'''
@@ -68,7 +68,7 @@ class Alidns(object):
         req.set_TTL(ttl)
         req.set_Value(value)
         js = json.loads(self.__client.do_action_with_exception(req).decode())
-        print('[U]%12s.%s -> %-24s;  %-12s;%s' % (record, self.__domain, value, record_type, ttl))
+        print('[U]%12s.%s -> %-24s;  %-12s;%s' % (record, self.__domain, value, record_type, ttl), flush=True)
         
     def __add_record(self, record, value, record_type, ttl):
         '''Add record.'''
@@ -80,7 +80,7 @@ class Alidns(object):
         req.set_TTL(ttl)
         req.set_Value(value)
         js = json.loads(self.__client.do_action_with_exception(req).decode())        
-        print('[A]%12s.%s -> %-24s;  %-12s;%s' % (record, self.__domain, value, record_type, ttl))
+        print('[A]%12s.%s -> %-24s;  %-12s;%s' % (record, self.__domain, value, record_type, ttl), flush=True)
 
     def add(self, record, value, record_type='A', ttl=600):
         '''Add record'''
@@ -119,6 +119,6 @@ class Alidns(object):
         if self.__is_exist(record):
             self.__remove_record(self.__records[record][3])
         else:
-            print('[-]Record: {} is not existence.'.format(record))
+            print('[-]Record: {} is not existence.'.format(record), flush=True)
         self.list()
         

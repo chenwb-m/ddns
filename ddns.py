@@ -20,10 +20,10 @@ access_key_secret = args.access_key_secret[0]
 domain = args.domain[0]
 record = args.record[0]
 
-print('%s -> access_key %s' % (str(datetime.datetime.now()), access_key))
-print('%s -> access_key_secret %s' % (str(datetime.datetime.now()), access_key_secret))
-print('%s -> domain %s' % (str(datetime.datetime.now()), domain))
-print('%s -> record %s' % (str(datetime.datetime.now()), record))
+print('%s -> access_key %s' % (str(datetime.datetime.now()), access_key), flush=True)
+print('%s -> access_key_secret %s' % (str(datetime.datetime.now()), access_key_secret), flush=True)
+print('%s -> domain %s' % (str(datetime.datetime.now()), domain), flush=True)
+print('%s -> record %s' % (str(datetime.datetime.now()), record), flush=True)
 
 IP = ''
 
@@ -57,7 +57,7 @@ def get_pub_ip():
     return ip
 
 def quit(signum, frame):
-    print('stop')
+    print('stop', flush=True)
     sys.exit()
 
 signal.signal(signal.SIGINT, quit)
@@ -68,14 +68,14 @@ while True:
     try:
         ip = get_pub_ip()
         if ip != IP:
-            print('%s -> ip change from %s to %s' % (str(datetime.datetime.now()), IP, ip))
+            print('%s -> ip change from %s to %s' % (str(datetime.datetime.now()), IP, ip), flush=True)
             alidns.add(record, ip)
-            print('%s -> updated ip from %s to %s' % (str(datetime.datetime.now()), IP, ip))
+            print('%s -> updated ip from %s to %s' % (str(datetime.datetime.now()), IP, ip), flush=True)
             IP = ip
         else:
-            print('%s -> ip not change' % (str(datetime.datetime.now())))
+            print('%s -> ip not change' % (str(datetime.datetime.now())), flush=True)
     except Exception as ex:
-        print(ex)
+        print(ex, flush=True)
     try:
         time.sleep(60 * 10)
     except:
