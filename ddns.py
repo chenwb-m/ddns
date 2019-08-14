@@ -53,7 +53,7 @@ IP = ''
 # def get_pub_ip():
 #     return get_out_ip(get_real_url())
 def get_pub_ip():
-    ip = requests.get('https://api.ipify.org').text
+    ip = requests.get('https://api.ipify.org', timeout=5).text
     return ip
 
 def quit(signum, frame):
@@ -68,8 +68,9 @@ while True:
     try:
         ip = get_pub_ip()
         if ip != IP:
+            print('%s -> ip change from %s to %s' % (str(datetime.datetime.now()), IP, ip))
             alidns.add(record, ip)
-            print('%s -> update ip from %s to %s' % (str(datetime.datetime.now()), IP, ip))
+            print('%s -> updated ip from %s to %s' % (str(datetime.datetime.now()), IP, ip))
             IP = ip
         else:
             print('%s -> ip not change' % (str(datetime.datetime.now())))
